@@ -16,23 +16,23 @@ fn main() -> io::Result<()> {
 	let convert = |x: &str| String::from(x).parse().unwrap();
 	let mut vint: Vec<u32>;// = vstr.into_iter().map(convert).collect();
 	// println!("{:?}", vint);
-	'outeri: for i in 0..100 {
+	for i in 0..100 {
 		'outerj: for j in 0..100 {
 			// println!("i: {} j: {}", i,j);
 			vint = vstr.to_vec().into_iter().map(convert).collect();
 			vint[1] = i;
 			vint[2] = j;
 			// println!("i: {} j: {}", vint[1], vint[2]);
-			'inner: for x in (0..vint.len()).step_by(4) {
+			for x in (0..vint.len()).step_by(4) {
 				match opscode_execute(&mut vint, x, x+3) {
 					Ok(_) => (),
 					Err(v) => {
 						if v > 0 {
 							// println!("i: {} j: {} v: {}", i, j, v);
 						}
-						if v == 19690720 {
+						if v == 19_690_720 {
 							println!("vint[0]: {}, noun: {}, verb: {}", vint[0], i, j);
-							return Ok(());
+							return Ok(())
 						} else {
 							continue 'outerj;
 						}
@@ -72,5 +72,5 @@ fn opscode_execute(vint:&mut Vec<u32>, from:usize, to:usize) ->Result<(), u32> {
 	} else if op == 2 {
 		vint[dest] = vint[ptr1] * vint[ptr2];
 	}
-	return Ok(());
+	Ok(())
 }
