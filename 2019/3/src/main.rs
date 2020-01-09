@@ -124,34 +124,30 @@ fn find_max_sum(wire1: &Vec<&str>, wire2: &Vec<&str>) -> i32 {
 }
 
 fn max_distances(a: Vec<i32>, b: Vec<i32>) -> Vec<i32> {
-    let left: i32;
-    let right: i32;
-    let up: i32;
-    let down: i32;
 
-    if a[0] > b[0] {
-        left = a[0];
+    let left: i32 = if a[0] > b[0] {
+        a[0]
     } else {
-        left = b[0];
-    }
+        b[0]
+    };
 
-    if a[1] > b[1] {
-        right = a[1];
+    let right: i32 = if a[1] > b[1] {
+        a[1]
     } else {
-        right = b[1];
-    }
+        b[1]
+    };
 
-    if a[2] > b[2] {
-        up = a[2];
+    let up: i32 = if a[2] > b[2] {
+        a[2]
     } else {
-        up = b[2];
-    }
+        b[2]
+    };
 
-    if a[3] > b[3] {
-        down = a[3];
+    let down: i32 = if a[3] > b[3] {
+        a[3]
     } else {
-        down = b[3];
-    }
+        b[3]
+    };
 
     // println!("md: left {} right {} up {} down {}", left,right,up,down);
     vec!(left,right,up,down)
