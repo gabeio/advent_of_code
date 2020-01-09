@@ -166,7 +166,7 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
     for i in y..grid.len() {
         for j in x..grid[0].len() {
             if grid[i][j] == value {
-                println!("({},{}) {}", i, j, grid[i][j]);
+                println!("q1 ({},{}) {}", i, j, grid[i][j]);
                 if closest[0].distance > (((i + j) - origin_sum) as i32) {
                     closest[0] = Closest {
                         y: (i) as i32,
@@ -177,26 +177,11 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
             }
         }
     }
-    // q3
-    for a in (0..=y).rev() {
-        for b in (0..=x).rev() {
-            if grid[a][b] == value {
-                println!("({},{}) {}", a, b, grid[a][b]);
-                if closest[2].distance > ((a + b) - origin_sum) as i32 {
-                    closest[2] = Closest {
-                        y: (a) as i32,
-                        x: (b) as i32,
-                        distance: ((a + b) - origin_sum) as i32,
-                    }
-                }
-            }
-        }
-    }
     // q2
     for c in (0..=y).rev() {
         for d in x..grid[0].len() {
             if grid[c][d] == value {
-                println!("({},{}) {}", c, d, grid[c][d]);
+                println!("q2 ({},{}) {}", c, d, grid[c][d]);
                 if closest[1].distance > ((c + d) - origin_sum) as i32 {
                     closest[1] = Closest {
                         y: (c) as i32,
@@ -207,11 +192,27 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
             }
         }
     }
+    // q3
+    for a in (0..=y).rev() {
+        for b in (0..=x).rev() {
+            if grid[a][b] == value {
+                println!("q3 ({},{}) {}", a, b, grid[a][b]);
+                println!("{} - {}", a+b, origin_sum);
+                if closest[2].distance > ((a + b) - origin_sum) as i32 {
+                    closest[2] = Closest {
+                        y: (a) as i32,
+                        x: (b) as i32,
+                        distance: ((a + b) - origin_sum) as i32,
+                    }
+                }
+            }
+        }
+    }
     // q4
     for e in y..grid.len() {
         for f in (0..=x).rev() {
             if grid[e][f] == value {
-                println!("({},{}) {}", e, f, grid[e][f]);
+                println!("q4 ({},{}) {}", e, f, grid[e][f]);
                 if closest[4].distance > ((e + f) - origin_sum) as i32 {
                     closest[4] = Closest {
                         y: (e) as i32,
