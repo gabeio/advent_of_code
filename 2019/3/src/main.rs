@@ -7,8 +7,6 @@ fn main() -> io::Result<()> {
     let wire1: Vec<&str> = buffer.split(',').collect();
     let buffer: String = read_line(); // read second line
     let wire2: Vec<&str> = buffer.split(',').collect();
-    // println!("wire1: {:?}", wire1);
-    // println!("wire2: {:?}", wire2);
     follow_wires(wire1, wire2);
     Ok(())
 }
@@ -23,16 +21,11 @@ fn read_line() -> String {
 }
 
 fn follow_wires<'a>(wire1: Vec<&str>, wire2: Vec<&str>) {
-    // let grid_size: i32 = (find_max(&wire1, &wire2) + 2)/2 + 196;
     let wire1_max: Vec<i32> = find_max_distance(&wire1);
-    // println!("wire1 maxs: {:?}", wire1_max);
     let wire2_max: Vec<i32> = find_max_distance(&wire2);
-    // println!("wire2 maxs: {:?}", wire2_max);
     let maxs: Vec<i32> = max_distances(wire1_max, wire2_max);
     let grid_size_x: usize = (maxs[0] + maxs[1] + 2).try_into().unwrap();
     let grid_size_y: usize = (maxs[2] + maxs[3] + 2).try_into().unwrap();
-    // println!("grid_size_x: {}", grid_size_x);
-    // println!("grid_size_y: {}", grid_size_y);
     let arr = vec![0; grid_size_x];
     let grid: Vec<Vec<i32>> = vec![arr; grid_size_y];
     let grid: Vec<Vec<i32>> = walk_wire(wire1, grid, &maxs, 1);
@@ -40,8 +33,6 @@ fn follow_wires<'a>(wire1: Vec<&str>, wire2: Vec<&str>) {
     let pgrid: Grid = Grid {
         yx: &grid,
     };
-    // let grid: Grid = walk_wire(wire2, grid);
-    // let grid = minimize_grid(grid);
     println!("{}", pgrid);
     find_closest(&maxs, &grid, 4); // 1 + 3
     find_closest(&maxs, &grid, 5); // 1 + 1 + 3
@@ -87,7 +78,6 @@ fn find_max_distance(wire: &Vec<&str>) -> Vec<i32> {
             left = x;
         }
     }
-    // println!("fmd: left {} right {} up {} down {}", left,right,up,down);
     vec![left.abs(), right.abs(), up.abs(), down.abs()]
 }
 
@@ -100,7 +90,6 @@ fn max_distances(a: Vec<i32>, b: Vec<i32>) -> Vec<i32> {
 
     let down: i32 = if a[3] > b[3] { a[3] } else { b[3] };
 
-    // println!("md: left {} right {} up {} down {}", left,right,up,down);
     vec![left, right, up, down]
 }
 
@@ -113,16 +102,13 @@ fn remove_first(s: &str) -> &str {
 fn walk_wire(wire: Vec<&str>, grid: Vec<Vec<i32>>, maxs: &Vec<i32>, add: i32) -> Vec<Vec<i32>> {
     let convert = |i: &str| String::from(remove_first(i)).parse().unwrap();
     let mut grid: Vec<Vec<i32>> = grid;
-    // let mut origin: Vec<i32> = vec!((grid.len()/2) as i32,(grid.len()/2) as i32);
     let mut origin: Vec<i32> = vec![maxs[3] + 1, maxs[0] + 1];
     let y: usize = origin[0].try_into().unwrap();
     let x: usize = origin[1].try_into().unwrap();
     grid[y][x] = 0;
-    // println!("origin: {:?}", origin);
     for i in wire {
         let distance: i32 = convert(i);
         let direction: char = i.chars().nth(0).unwrap().try_into().unwrap();
-        // println!("walk_wire: {:?} {} {}", origin, direction, distance);
         let (_grid, _origin) = walk(origin, direction, distance, grid, add);
         grid = _grid;
         origin = _origin;
@@ -139,25 +125,21 @@ fn walk(
 ) -> (Vec<Vec<i32>>, Vec<i32>) {
     for _distance in 0..distance {
         if direction == 'R' {
-            // println!("usize: [{:?}][{:?}]", origin[0], origin[1]);
             let y: usize = origin[0].try_into().unwrap();
             let x: usize = origin[1].try_into().unwrap();
             grid[y][x] += add;
             origin[1] += 1;
         } else if direction == 'L' {
-            // println!("usize: [{:?}][{:?}]", origin[0], origin[1]);
             let y: usize = origin[0].try_into().unwrap();
             let x: usize = origin[1].try_into().unwrap();
             grid[y][x] += add;
             origin[1] -= 1
         } else if direction == 'U' {
-            // println!("usize: [{:?}][{:?}]", origin[0], origin[1]);
             let y: usize = origin[0].try_into().unwrap();
             let x: usize = origin[1].try_into().unwrap();
             grid[y][x] += add;
             origin[0] += 1;
         } else if direction == 'D' {
-            // println!("usize: [{:?}][{:?}]", origin[0], origin[1]);
             let y: usize = origin[0].try_into().unwrap();
             let x: usize = origin[1].try_into().unwrap();
             grid[y][x] += add;
