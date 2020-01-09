@@ -1,5 +1,5 @@
-use std::io::{self};
 use std::convert::TryInto;
+use std::io::{self};
 
 fn main() -> io::Result<()> {
     let mut buffer: String = read_line(); // read first line
@@ -37,7 +37,7 @@ fn follow_wires(wire1: Vec<&str>, wire2: Vec<&str>) {
     let grid: Vec<Vec<i32>> = vec![arr; grid_size_y];
 
     let grid: Vec<Vec<i32>> = walk_wire(wire1, grid, &maxs);
-    let grid: Grid = Grid{
+    let grid: Grid = Grid {
         yx: walk_wire(wire2, grid, &maxs),
     };
     // let grid: Grid = walk_wire(wire2, grid);
@@ -102,7 +102,7 @@ fn find_max_distance(wire: &Vec<&str>) -> Vec<i32> {
         }
     }
     // println!("fmd: left {} right {} up {} down {}", left,right,up,down);
-    vec!(left.abs(),right.abs(),up.abs(),down.abs())
+    vec![left.abs(), right.abs(), up.abs(), down.abs()]
 }
 
 #[allow(dead_code)]
@@ -110,7 +110,7 @@ fn find_max_sum(wire1: &Vec<&str>, wire2: &Vec<&str>) -> i32 {
     let convert = |i: &str| String::from(remove_first(i)).parse().unwrap();
     let mut max: i32 = convert(wire1[0]);
     for x in wire1 {
-        max += convert(x)
+        max += convert(x);
     }
     let mut max2: i32 = convert(wire2[0]);
     for x in wire2 {
@@ -124,33 +124,16 @@ fn find_max_sum(wire1: &Vec<&str>, wire2: &Vec<&str>) -> i32 {
 }
 
 fn max_distances(a: Vec<i32>, b: Vec<i32>) -> Vec<i32> {
+    let left: i32 = if a[0] > b[0] { a[0] } else { b[0] };
 
-    let left: i32 = if a[0] > b[0] {
-        a[0]
-    } else {
-        b[0]
-    };
+    let right: i32 = if a[1] > b[1] { a[1] } else { b[1] };
 
-    let right: i32 = if a[1] > b[1] {
-        a[1]
-    } else {
-        b[1]
-    };
+    let up: i32 = if a[2] > b[2] { a[2] } else { b[2] };
 
-    let up: i32 = if a[2] > b[2] {
-        a[2]
-    } else {
-        b[2]
-    };
-
-    let down: i32 = if a[3] > b[3] {
-        a[3]
-    } else {
-        b[3]
-    };
+    let down: i32 = if a[3] > b[3] { a[3] } else { b[3] };
 
     // println!("md: left {} right {} up {} down {}", left,right,up,down);
-    vec!(left,right,up,down)
+    vec![left, right, up, down]
 }
 
 fn remove_first(s: &str) -> &str {
@@ -163,7 +146,7 @@ fn walk_wire(wire: Vec<&str>, grid: Vec<Vec<i32>>, maxs: &Vec<i32>) -> Vec<Vec<i
     let convert = |i: &str| String::from(remove_first(i)).parse().unwrap();
     let mut grid: Vec<Vec<i32>> = grid;
     // let mut origin: Vec<i32> = vec!((grid.len()/2) as i32,(grid.len()/2) as i32);
-    let mut origin: Vec<i32> = vec!(maxs[3] + 1, maxs[0] + 1);
+    let mut origin: Vec<i32> = vec![maxs[3] + 1, maxs[0] + 1];
     let y: usize = origin[0].try_into().unwrap();
     let x: usize = origin[1].try_into().unwrap();
     grid[y][x] = -5;
@@ -180,7 +163,12 @@ fn walk_wire(wire: Vec<&str>, grid: Vec<Vec<i32>>, maxs: &Vec<i32>) -> Vec<Vec<i
     grid
 }
 
-fn walk(mut origin: Vec<i32>, direction: char, distance: i32, mut grid: Vec<Vec<i32>>) -> (Vec<Vec<i32>>,Vec<i32>) {
+fn walk(
+    mut origin: Vec<i32>,
+    direction: char,
+    distance: i32,
+    mut grid: Vec<Vec<i32>>,
+) -> (Vec<Vec<i32>>, Vec<i32>) {
     for _distance in 0..distance {
         if direction == 'R' {
             // println!("usize: [{:?}][{:?}]", origin[0], origin[1]);
@@ -210,12 +198,12 @@ fn walk(mut origin: Vec<i32>, direction: char, distance: i32, mut grid: Vec<Vec<
             panic!("Unknown {:?}", distance);
         }
     }
-    return (grid, origin)
+    return (grid, origin);
 }
 
 fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>) {
-    let mut origin: Vec<i32> = vec!(maxs[3] + 1, maxs[0] + 1);
-    let mut closest_up = Closest{
+    let mut origin: Vec<i32> = vec![maxs[3] + 1, maxs[0] + 1];
+    let mut closest_up = Closest {
         x: 0,
         y: 0,
         distance: std::i32::MAX,
@@ -226,18 +214,18 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>) {
         for j in x..grid[i].len() {
             // look for closest 2+
             if grid[i][j] > 1 {
-                if closest_up.distance > (i+j) as i32 {
+                if closest_up.distance > (i + j) as i32 {
                     closest_up = Closest {
                         y: (i) as i32,
                         x: (j) as i32,
-                        distance: (i+j) as i32,
+                        distance: (i + j) as i32,
                     }
                 }
             }
         }
     }
     let current_distance: i32 = closest_up.distance;
-    let mut closest_down = Closest{
+    let mut closest_down = Closest {
         x: 0,
         y: 0,
         distance: std::i32::MAX,
@@ -246,18 +234,24 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>) {
         for b in (0..x).rev() {
             // look for closest 2+
             if grid[a][b] > 1 {
-                if closest_down.distance > (a+b) as i32 {
+                if closest_down.distance > (a + b) as i32 {
                     closest_down = Closest {
                         y: (a) as i32,
                         x: (b) as i32,
-                        distance: (a+b) as i32,
+                        distance: (a + b) as i32,
                     }
                 }
             }
         }
     }
-    println!("closest: x: {} y: {} distance: {}", closest_up.x, closest_up.y, closest_up.distance);
-    println!("closest: x: {} y: {} distance: {}", closest_down.x, closest_down.y, closest_down.distance);
+    println!(
+        "closest: x: {} y: {} distance: {}",
+        closest_up.x, closest_up.y, closest_up.distance
+    );
+    println!(
+        "closest: x: {} y: {} distance: {}",
+        closest_down.x, closest_down.y, closest_down.distance
+    );
 }
 
 struct Closest {
@@ -267,7 +261,7 @@ struct Closest {
 }
 
 struct Grid {
-    yx: Vec<Vec<i32>>
+    yx: Vec<Vec<i32>>,
 }
 
 impl std::fmt::Display for Grid {
