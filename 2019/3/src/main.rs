@@ -166,12 +166,13 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
     for i in y..grid.len() {
         for j in x..grid[0].len() {
             if grid[i][j] == value {
-                println!("q1 ({},{}) {}", i, j, grid[i][j]);
-                if closest[0].distance > (((i + j) - origin_sum) as i32) {
+                // println!("q1 ({},{}) {}", i, j, grid[i][j]);
+                let distance: i32 = ((i + j) as i32 - origin_sum as i32).abs();
+                if closest[0].distance > distance {
                     closest[0] = Closest {
                         y: (i) as i32,
                         x: (j) as i32,
-                        distance: ((i + j) - origin_sum) as i32,
+                        distance: distance,
                     }
                 }
             }
@@ -181,12 +182,13 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
     for c in (0..=y).rev() {
         for d in x..grid[0].len() {
             if grid[c][d] == value {
-                println!("q2 ({},{}) {}", c, d, grid[c][d]);
-                if closest[1].distance > ((c + d) - origin_sum) as i32 {
+                // println!("q2 ({},{}) {}", c, d, grid[c][d]);
+                let distance: i32 = ((c + d) as i32 - origin_sum as i32).abs();
+                if closest[1].distance > distance {
                     closest[1] = Closest {
                         y: (c) as i32,
                         x: (d) as i32,
-                        distance: ((c + d) - origin_sum) as i32,
+                        distance: distance,
                     }
                 }
             }
@@ -196,13 +198,14 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
     for a in (0..=y).rev() {
         for b in (0..=x).rev() {
             if grid[a][b] == value {
-                println!("q3 ({},{}) {}", a, b, grid[a][b]);
-                println!("{} - {}", a+b, origin_sum);
-                if closest[2].distance > ((a + b) - origin_sum) as i32 {
+                // println!("q3 ({},{}) {}", a, b, grid[a][b]);
+                // println!("{} - {}", a+b, origin_sum);
+                let distance: i32 = ((a + b) as i32 - origin_sum as i32).abs();
+                if closest[2].distance > distance {
                     closest[2] = Closest {
                         y: (a) as i32,
                         x: (b) as i32,
-                        distance: ((a + b) - origin_sum) as i32,
+                        distance: distance,
                     }
                 }
             }
@@ -212,12 +215,13 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
     for e in y..grid.len() {
         for f in (0..=x).rev() {
             if grid[e][f] == value {
-                println!("q4 ({},{}) {}", e, f, grid[e][f]);
-                if closest[4].distance > ((e + f) - origin_sum) as i32 {
-                    closest[4] = Closest {
+                // println!("q4 ({},{}) {}", e, f, grid[e][f]);
+                let distance: i32 = ((e + f) as i32 - origin_sum as i32).abs();
+                if closest[3].distance > distance.abs() {
+                    closest[3] = Closest {
                         y: (e) as i32,
                         x: (f) as i32,
-                        distance: ((e + f) - origin_sum) as i32,
+                        distance: distance,
                     }
                 }
             }
@@ -225,26 +229,26 @@ fn find_closest(maxs: &Vec<i32>, grid: &Vec<Vec<i32>>, value: i32) {
     }
     if closest[0].distance != std::i32::MAX {
         println!(
-            "closest: x: {} y: {} distance: {}",
-            closest[0].x, closest[0].y, closest[0].distance
+            "q1 closest: x: {} y: {} distance: {} value:{}",
+            closest[0].x, closest[0].y, closest[0].distance, value,
         );
     }
     if closest[1].distance != std::i32::MAX {
         println!(
-            "closest: x: {} y: {} distance: {}",
-            closest[1].x, closest[1].y, closest[1].distance
+            "q2 closest: x: {} y: {} distance: {} value:{}",
+            closest[1].x, closest[1].y, closest[1].distance, value,
         );
     }
     if closest[2].distance != std::i32::MAX {
         println!(
-            "closest: x: {} y: {} distance: {}",
-            closest[2].x, closest[2].y, closest[2].distance
+            "q3 closest: x: {} y: {} distance: {} value:{}",
+            closest[2].x, closest[2].y, closest[2].distance, value,
         );
     }
     if closest[3].distance != std::i32::MAX {
         println!(
-            "closest: x: {} y: {} distance: {}",
-            closest[3].x, closest[3].y, closest[3].distance
+            "q4 closest: x: {} y: {} distance: {} value:{}",
+            closest[3].x, closest[3].y, closest[3].distance, value,
         );
     }
 }
