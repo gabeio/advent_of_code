@@ -1,6 +1,6 @@
 use std::io::{self, Read};
-use std::collections::HashMap;
-use std::collections::HashSet;
+use std::collections::{BTreeMap, BTreeSet};
+use std::time::SystemTime;
 
 use regex::Regex;
 
@@ -50,80 +50,80 @@ fn readin() -> String {
 
 fn part1(buffer: &String) -> usize {
     println!("Part 1 Beginning.");
+    let now = SystemTime::now();
     let bags = parser(buffer);
+    let parser = now.elapsed().unwrap();
+    let now = SystemTime::now();
     let count = counter(bags, "shiny gold bag");
+    let counter = now.elapsed().unwrap();
     println!("count: {}", count);
+    println!("now: {:?}, parser: {:?}, counter: {:?}", now, parser, counter);
     count
 }
 
 fn part2(buffer: &String) -> usize {
-    println!("Part 1 Beginning.");
+    println!("Part 2 Beginning.");
+    let now = SystemTime::now();
     let bags = parser(buffer);
+    let parser = now.elapsed().unwrap();
+    let now = SystemTime::now();
     let contains = contains(bags, "shiny gold bag");
+    let container = now.elapsed().unwrap();
     println!("contains: {}", contains);
+    println!("now: {:?}, parser: {:?}, container: {:?}", now, parser, container);
     contains
 }
 
 #[derive(Debug)]
 struct Bag {
     this: String,
-    inside: HashMap<String, usize>,
+    inside: BTreeMap<String, usize>,
 }
 
-// fn parser(buffer: &String, vecs: &mut HashMap<String, Vec<String>>) -> Vec<Bag> {
 fn parser(buffer: &String) -> Vec<Bag> {
     let outside = Regex::new(r"^([\w\s]+bag)s contain").unwrap();
     let inside = Regex::new(r"(?m)((\d) ([\w\s]+bag))").unwrap();
     let vstr: Vec<&str> = buffer.split("\n").collect(); // split by bag
-    let mut bags: Vec<Bag> = vec!(); // ready a 
+    let mut bags: Vec<Bag> = vec!();
     for x in vstr {
         let mut bag: Bag = Bag{
             this: "".to_string(),
-            inside: HashMap::new(),
+            inside: BTreeMap::new(),
         };
-        let outside_bag = outside.captures(x).unwrap().get(1).unwrap().as_str();
-        bag.this = outside_bag.to_string();
+        bag.this = outside.captures(x).unwrap().get(1).unwrap().as_str().to_string();
         for y in inside.find_iter(x) {
-            let y = y.as_str();
-            // println!("inside_bag: {:?}\n", y);
-            let caps = inside.captures(y).unwrap();
-            // println!("caps: {:?}\n", caps);
+            let caps = inside.captures(y.as_str()).unwrap();
             let insider = caps.get(3).unwrap().as_str().to_string();
             let count = caps.get(2).unwrap().as_str().parse().unwrap();
             bag.inside.insert(insider, count);
         }
-        // println!("bag: {:?}", bag);
         bags.push(bag);
     }
-    // println!("bags: {:?}", bags);
     bags
 }
 
 fn counter(bags: Vec<Bag>, bag: &str) -> usize {
-    let potential: HashSet<String> = recursive_counter(&bags, bag);
+    let potential: BTreeSet<String> = recursive_counter(&bags, bag);
     potential.len()
 }
 
-fn recursive_counter(bags: &Vec<Bag>, current: &str) -> HashSet<String> {
-    let mut holder: HashSet<String> = HashSet::new();
+fn recursive_counter(bags: &Vec<Bag>, current: &str) -> BTreeSet<String> {
+    let mut holder: BTreeSet<String> = BTreeSet::new();
     for x in bags {
         for (k,_v) in x.inside.clone() {
             if current == k {
                 holder.insert(x.this.as_str().to_string());
-                let potential: HashSet<String> = recursive_counter(bags, &x.this.as_str());
-                for z in potential {
+                for z in recursive_counter(bags, &x.this.as_str()) {
                     holder.insert(z);
                 }
             }
         }
     }
-    // println!("holder: {:?}", holder);
     holder
 }
 
 fn contains(bags: Vec<Bag>, bag: &str) -> usize {
-    let potential: usize = recursive_contains(&bags, bag)-1;
-    potential
+    recursive_contains(&bags, bag)-1
 }
 
 fn recursive_contains(bags: &Vec<Bag>, current: &str) -> usize {
