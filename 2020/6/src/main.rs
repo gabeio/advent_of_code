@@ -109,27 +109,14 @@ fn summary_all_forms(buffer: &String) -> usize {
 }
 
 fn handle_group(x: String) -> usize {
-
-    println!("x: {:?}", x);
-
-
     // split group up by people
     let people: Vec<&str> = x.split("\n").collect();
 
-    // collect first person's response
-    let mut first: Vec<char> = vec!();
-    for y in String::from(people[0]).drain(..).collect::<Vec<char>>() {
-        if y != '\n' {
-            first.push(y);
-        }
-    }
-    first.sort();
-    // println!("first: {:?}", first);
-
+    // collect everyone's responses
     let mut all: HashMap<char, usize> = HashMap::new();
+    let mut total: usize = 0;
     for person in people {
         if person == "" {
-            // println!("continue 1 \n");
             continue;
         }
 
@@ -143,57 +130,16 @@ fn handle_group(x: String) -> usize {
                 }
             }
         }
+        total += 1;
     }
 
-    let mut max: usize = 0;
-    for (_, v) in all.iter() {
-        if *v > max {
-            max = *v;
-        }
-    }
-
+    // if everyone answered yes add 1
     let mut local = 0;
     for (_, v) in all.iter() {
-        if *v == max {
-            local += v;
-        }
-    }
-
-    let people: Vec<&str> = x.split("\n").collect();
-
-    let mut current: Vec<char> = vec!();
-    for person in people {
-        // println!("person: {:?}", person);
-        // if nothing in string we can skip as it's just an extra new line
-        if person == "" {
-            // println!("continue 1 \n");
-            continue;
-        }
-
-        // collect current person's responses
-        for z in String::from(person).drain(..).collect::<Vec<char>>() {
-            if z != '\n' {
-                current.push(z);
-            }
-        }
-
-        current.sort();
-
-        // compare current to first
-        println!("compare :: {:?} == {:?} ? {:?}", first, current, first == current);
-        if first == current {
-            // if they match add to local
-            // println!("local: {}", local);
+        if *v == total {
             local += 1;
-        } else {
-            // if they don't match then our entire group didn't answer the same
-            // println!("continue 3 \n");
-            return 0;
         }
-        current = vec!();
     }
-
-    println!("local: {}", local);
 
     local
 }
