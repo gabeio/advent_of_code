@@ -67,22 +67,23 @@ fn part2(buffer: &String) -> std::io::Result<usize> {
 }
 
 fn jolt_jumps(mut vus: Vec<isize>) -> std::io::Result<usize> {
+    vus.sort();
     println!("vus: {:?}", vus);
     let mut current = 0;
     let mut differences: HashMap<usize, usize> = HashMap::new();
-    loop {
+    for x in vus {
         let mut matches = false;
-        let a_match = ofor(1, &vus, current);
+        let a_match = ofor(1, x, current);
         if a_matcher(a_match, &mut differences, &mut current, &mut matches, 1) {
             continue;
         }
-        let a_match = ofor(2, &vus, current);
+        let a_match = ofor(2, x, current);
         if a_matcher(a_match, &mut differences, &mut current, &mut matches, 2) {
             continue;
         }
-        let a_match = ofor(3, &vus, current);
+        let a_match = ofor(3, x, current);
         if a_matcher(a_match, &mut differences, &mut current, &mut matches, 3) {
-            continue
+            continue;
         }
         if !matches {
             break;
@@ -126,14 +127,11 @@ fn recursive_sets(sets: &mut HashSet<Vec<usize>>, vus: Vec<isize>) {
 
 }
 
-fn ofor(matchi: isize, vus: &Vec<isize>, current: isize) -> Option<isize> {
+fn ofor(matchi: isize, x: isize, current: isize) -> Option<isize> {
     println!("matchi: {}", matchi);
-    for x in vus {
-        // println!("ofor x: {} current: {} matchi: {}", *x, current, matchi);
-        if (x-current) == matchi {
-            println!("ofor x: {} current: {} matchi: {} (PASS)", *x, current, matchi);
-            return Some(*x);
-        }
+    if (x-current) == matchi {
+        println!("ofor x: {} current: {} matchi: {} (PASS)", x, current, matchi);
+        return Some(x);
     }
     None
 }
