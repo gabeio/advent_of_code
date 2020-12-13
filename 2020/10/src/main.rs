@@ -128,7 +128,7 @@ fn jolt_sets(mut vus: Vec<usize>) -> std::io::Result<usize> {
 }
 
 fn recursive_sets(sets: &mut HashSet<Vec<usize>>, last: usize, vus: Vec<usize>) {
-    println!("vus: {:?}", vus);
+    // println!("vus: {:?}", vus);
     let mut set: Vec<usize> = vec!();
     let mut current = 0;
     for x in 0..(vus.clone().len()) {
@@ -158,7 +158,8 @@ fn recursive_sets(sets: &mut HashSet<Vec<usize>>, last: usize, vus: Vec<usize>) 
         }
         break;
     }
-    if current == last {
+    println!("current: {}", current);
+    if current+3 == last {
         println!("good set: {:?}", set);
         sets.insert(set);
     } else {
