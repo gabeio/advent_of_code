@@ -1,5 +1,7 @@
 use std::io::{self, Read};
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
+
+use petgraph::graphmap::UnGraphMap;
 
 #[cfg(test)]
 mod tests {
@@ -35,8 +37,8 @@ mod tests {
     #[test]
     fn part2_input1() -> std::io::Result<()> {
         let contents = fs::read_to_string("./input_test1").expect("Can't read file.");
-        let vus: Vec<usize> = contents.split("\n").map(|x| x.parse().unwrap()).collect();
-        assert_eq!(jolt_sets(vus).unwrap(), 8);
+        // let contents: Vec<usize> = contents.split("\n").map(|x| x.parse().unwrap()).collect();
+        assert_eq!(part2(&contents).unwrap(), 8);
         Ok(())
     }
 
@@ -72,27 +74,19 @@ fn readin() -> String {
     return buffer;
 }
 
+
 fn part1(buffer: &String) -> std::io::Result<usize> {
     println!("Part 1 Beginning.");
     let vus: Vec<usize> = buffer.split("\n").map(|x| x.parse().unwrap()).collect();
     let result = jolt_jumps(vus).unwrap();
     // let result = decrypt(buffer, 25).unwrap().unwrap();
-    println!("{:?}", result);
+    println!("Part 1 Answer: {}.", result.0);
     Ok(result.0)
-}
-
-fn part2(buffer: &String) -> std::io::Result<usize> {
-    println!("Part 2 Beginning.");
-    let vus: Vec<usize> = buffer.split("\n").map(|x| x.parse().unwrap()).collect();
-    let result = jolt_sets(vus).unwrap();
-    // let result = decrypt(buffer, 25).unwrap().unwrap();
-    println!("{:?}", result);
-    Ok(result)
 }
 
 fn jolt_jumps(mut vus: Vec<usize>) -> std::io::Result<(usize, usize)> {
     vus.sort();
-    println!("vus: {:?}", vus);
+    // println!("vus: {:?}", vus);
     let mut current = 0;
     let mut differences: HashMap<usize, usize> = HashMap::new();
     for x in vus {
@@ -114,57 +108,8 @@ fn jolt_jumps(mut vus: Vec<usize>) -> std::io::Result<(usize, usize)> {
         break;
     }
     bump_differences(&mut differences, 3);
-    println!("differences: {:?}", differences);
+    // println!("differences: {:?}", differences);
     Ok((differences[&1]*differences[&3], current as usize+3))
-}
-
-fn jolt_sets(mut vus: Vec<usize>) -> std::io::Result<usize> {
-    vus.sort();
-    println!("vus: {:?}", vus);
-    let mut sets: HashSet<Vec<usize>> = HashSet::new();
-    let last = jolt_jumps(vus.clone()).unwrap().1;
-    recursive_sets(&mut sets, last, vus.clone());
-    Ok(sets.len())
-}
-
-fn recursive_sets(sets: &mut HashSet<Vec<usize>>, last: usize, vus: Vec<usize>) {
-    // println!("vus: {:?}", vus);
-    let mut set: Vec<usize> = vec!();
-    let mut current = 0;
-    for x in 0..(vus.clone().len()) {
-        if (vus[x]-current) == 1 {
-            set.push(vus[x]);
-            let mut vis = vus.clone();
-            vis.remove(x);
-            recursive_sets(sets, last, vis);
-            current = vus[x];
-            continue;
-        }
-        if (vus[x]-current) == 2 {
-            set.push(vus[x]);
-            let mut vis = vus.clone();
-            vis.remove(x);
-            recursive_sets(sets, last, vis);
-            current = vus[x];
-            continue;
-        }
-        if (vus[x]-current) == 3 {
-            set.push(vus[x]);
-            let mut vis = vus.clone();
-            vis.remove(x);
-            recursive_sets(sets, last, vis);
-            current = vus[x];
-            continue;
-        }
-        break;
-    }
-    println!("current: {}", current);
-    if current+3 == last {
-        println!("good set: {:?}", set);
-        sets.insert(set);
-    } else {
-        println!("failed set: {:?}", set);
-    }
 }
 
 fn bump_differences(differences: &mut HashMap<usize,usize>, num: usize) {
@@ -172,5 +117,43 @@ fn bump_differences(differences: &mut HashMap<usize,usize>, num: usize) {
         *x += 1;
     } else {
         differences.insert(num, 1);
+    }
+}
+
+
+fn part2(buffer: &String) -> std::io::Result<usize> {
+    println!("Part 2 Beginning.");
+    let mut vec_usize: Vec<usize> = buffer.split("\n").map(|x| x.parse().unwrap()).collect();
+    let last = jolt_jumps(vec_usize.clone()).unwrap().1;
+    vec_usize.push(last); // add max as ending jump
+    vec_usize.push(0); // add 0 as starting jump
+    vec_usize.sort(); // it is faster if sorted
+    let mut undirected_graph_map: UnGraphMap<usize, usize> = UnGraphMap::new();
+    // let mut vec_nodes = vec!();
+    for a in 0..vec_usize.len() {
+        undirected_graph_map.add_node(vec_usize[a]);
+        for b in a+1..vec_usize.len() {
+            // println!("a: {} b: {}", vec_usize[a], vec_usize[b]);
+            if vec_usize[b]-vec_usize[a] <= 3 {
+                undirected_graph_map.add_edge(vec_usize[a], vec_usize[b], vec_usize[b]-vec_usize[a]);
+            }
+        }
+    }
+    // println!("undirected_graph_map: {:?}", undirected_graph_map);
+    let mut counter: usize = 0;
+    walker(&undirected_graph_map, &mut counter, last, 0);
+    println!("Part 2 Answer: {}.", counter);
+    Ok(counter)
+}
+
+fn walker(graph: &UnGraphMap<usize, usize>, counter: &mut usize, last: usize, current: usize) {
+    if current == last {
+        *counter += 1;
+    }
+    for x in graph.edges(current) {
+        if x.0 < x.1 {
+            // println!("x: {:?}", x);
+            walker(&graph, counter, last, x.1);
+        }
     }
 }
