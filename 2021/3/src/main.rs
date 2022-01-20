@@ -98,11 +98,9 @@ fn filter(binaries: Vec<u32>, count: u32, oxy: bool) -> u32 {
             }
         }
         if on.len() == 0 {
-            mask = mask.rotate_right(1);
             break;
         }
         if off.len() == 0 {
-            mask = mask.rotate_right(1);
             break;
         }
         if on.len() == off.len() && oxy == true {
