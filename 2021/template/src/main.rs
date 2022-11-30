@@ -6,14 +6,15 @@ use std::io::{self, Read};
 fn main() -> io::Result<()> {
     env_logger::init();
     let buffer = readin();
-    //println!("{:?}", buffer);
-    let mut vstr: Vec<&str> = buffer.split('\n').collect();
-    vstr.pop();
-    let vstr: Vec<&str> = vstr;
-    //println!("{:?}", vstr);
+    trace!("buffer {:?}", &buffer);
+    let mut vstr: Vec<&str> = buffer.split(',').collect();
+    trace!("vstr {:?}", &vstr);
+    let last: Vec<&str> = vstr.pop().unwrap().split('\n').collect();
+    trace!("last {:?}", &last);
+    vstr.push(last[0]);
     let convert = |x: &str| String::from(x).parse().unwrap();
     let vint: Vec<u32> = vstr.to_vec().into_iter().map(convert).collect();
-    //println!("{:?}", vint);
+    trace!("vint {:?}", &vint);
     println!("part 1: {:?}", part1(&vint));
     println!("part 2: {:?}", part2(&vint));
     Ok(())
