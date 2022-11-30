@@ -32,7 +32,7 @@ fn readin() -> String {
 }
 
 pub fn sum_from_zero(n: u32) -> u32 {
-    (0..n+1).fold(0, |a, b| a + b)
+    n*(n+1)/2
 }
 
 fn horizontal_align(input: &Vec<u32>, align: u32, part2: bool) -> u32 {
