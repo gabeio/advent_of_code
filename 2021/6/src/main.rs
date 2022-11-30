@@ -2,7 +2,6 @@
 extern crate log;
 
 use std::io::{self, Read};
-use std::collections::BTreeMap;
 
 fn main() -> io::Result<()> {
     env_logger::init();
@@ -14,7 +13,7 @@ fn main() -> io::Result<()> {
     trace!("last {:?}", &last);
     vstr.push(last[0]);
     let convert = |x: &str| String::from(x).parse().unwrap();
-    let vint: Vec<u8> = vstr.to_vec().into_iter().map(convert).collect();
+    let vint: Vec<usize> = vstr.to_vec().into_iter().map(convert).collect();
     trace!("vint {:?}", &vint);
     println!("part 1: {:?}", part1(&vint));
     println!("part 2: {:?}", part2(&vint));
@@ -34,42 +33,22 @@ fn convert(x: &str) -> u8 {
     return x.parse().unwrap();
 }
 
-fn fish(input: &Vec<u8>, day: usize) -> u64 {
+fn fish(input: &Vec<usize>, day: usize) -> u64 {
     let fish = input.clone();
     debug!("fish {:?}", &fish);
-    let mut groups: BTreeMap<u8,u64> = BTreeMap::new();
-    for f in &fish {
-        if groups.contains_key(&f) {
-            if let Some(z) = groups.get_mut(&f) {
-                *z += 1;
-            } else {
-                groups.insert(*f, 1);
-            }
-        } else {
-            groups.insert(*f, 1);
-        }
+    let mut groups: Vec<u64> = vec![0;9];
+    for i in 0..fish.len() {
+        groups[fish[i]] += 1;
     }
     debug!("groups {:?}", &groups);
     for day in 0..day {
-        let mut next: BTreeMap<u8,u64> = BTreeMap::new();
-        for (k, v) in &groups {
-            if *k == 0u8 {
-                if let Some(z) = next.get_mut(&8) {
-                    *z += *v; // create count of 0 as 8
-                } else {
-                    next.insert(8, *v);
-                }
-                if let Some(z) = next.get_mut(&6) {
-                    *z += *v; // reset parents
-                } else {
-                    next.insert(6, *v);
-                }
+        let mut next: Vec<u64> = vec![0; 9];
+        for i in 0..groups.len() {
+            if i == 0 {
+                next[8] += groups[i];
+                next[6] += groups[i];
             } else {
-                if let Some(z) = next.get_mut(&(k-1)) {
-                    *z += *v; // reset parents
-                } else {
-                    next.insert(k-1, *v);
-                }
+                next[i-1] += groups[i];
             }
         }
         debug!("day {} groups {:?}", &day, &groups);
@@ -77,18 +56,17 @@ fn fish(input: &Vec<u8>, day: usize) -> u64 {
         groups = next;
     }
     let mut count = 0;
-    for (_, v) in &groups {
-        //
-        count += *v as u64;
+    for i in 0..groups.len() {
+        count += groups[i];
     }
     count
 }
 
-fn part1(input: &Vec<u8>) -> u64 {
+fn part1(input: &Vec<usize>) -> u64 {
     fish(input, 80usize)
 }
 
 #[allow(unused_variables)]
-fn part2(input: &Vec<u8>) -> u64 {
+fn part2(input: &Vec<usize>) -> u64 {
     fish(input, 256usize)
 }
