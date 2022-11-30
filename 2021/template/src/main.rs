@@ -1,6 +1,10 @@
+#[macro_use]
+extern crate log;
+
 use std::io::{self, Read};
 
 fn main() -> io::Result<()> {
+    env_logger::init();
     let buffer = readin();
     //println!("{:?}", buffer);
     let mut vstr: Vec<&str> = buffer.split('\n').collect();
@@ -10,8 +14,8 @@ fn main() -> io::Result<()> {
     let convert = |x: &str| String::from(x).parse().unwrap();
     let vint: Vec<u32> = vstr.to_vec().into_iter().map(convert).collect();
     //println!("{:?}", vint);
-    println!("{:?}", part1(&vint));
-    println!("{:?}", part2(&vint));
+    println!("part 1: {:?}", part1(&vint));
+    println!("part 2: {:?}", part2(&vint));
     Ok(())
 }
 
@@ -21,6 +25,10 @@ fn readin() -> String {
     let mut handle = stdin.lock();
     let _result = handle.read_to_string(&mut buffer);
     return buffer;
+}
+
+fn convert(x: &str) -> u32 {
+    return x.parse().unwrap();
 }
 
 fn part1(input: &Vec<u32>) -> u32 {
