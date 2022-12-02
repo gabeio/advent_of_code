@@ -4,7 +4,7 @@ extern crate log;
 use std::io::{self, Read};
 
 // grab input as solid string
-fn readin() -> String {
+pub fn readin() -> String {
     let mut buffer = String::new();
     let stdin = io::stdin();
     let mut handle = stdin.lock();
@@ -17,7 +17,7 @@ fn readin() -> String {
 // split lines by character
 // parse characters into ints
 // collect into grid
-fn int_grid(buffer: &String, split: char) -> Vec<Vec<u32>> {
+pub fn int_grid(buffer: &String, split: char) -> Vec<Vec<u32>> {
     // convert buffer to lines
     let vstr: Vec<&str> = buffer.split(split).collect();
     trace!("vstr {:?}", &vstr);
@@ -32,7 +32,7 @@ fn int_grid(buffer: &String, split: char) -> Vec<Vec<u32>> {
 // split lines
 // split lines by character
 // collect into grid
-fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>> {
+pub fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>> {
     let vstr: Vec<&str> = buffer.split(split).collect();
     trace!("vstr {:?}", &vstr);
     let vstr: Vec<Vec<char>> = vstr.iter().map(|e| e.chars().collect()).collect();
@@ -44,7 +44,7 @@ fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>> {
 
 // split lines
 // convert to ints
-fn int_list(buffer: &String, split: char) -> Vec<u32> {
+pub fn int_list(buffer: &String, split: char) -> Vec<u32> {
     let vstr: Vec<&str> = buffer.split(split).collect();
     trace!("vstr {:?}", &vstr);
     let convert = |x: &str| String::from(x).parse().unwrap();
@@ -54,14 +54,14 @@ fn int_list(buffer: &String, split: char) -> Vec<u32> {
 }
 
 // split lines
-fn str_list(buffer: &String, split: char) -> Vec<&str> {
+pub fn str_list(buffer: &String, split: char) -> Vec<&str> {
     let vstr: Vec<&str> = buffer.split(split).collect();
     trace!("vstr {:?}", &vstr);
     vstr
 }
 
 // split lines
-fn string_list(buffer: &String, split: char) -> Vec<String> {
+pub fn string_list(buffer: &String, split: char) -> Vec<String> {
     let vstr: Vec<&str> = buffer.split(split).collect();
     trace!("vstr {:?}", &vstr);
     let convert = |x: &str| String::from(x);
