@@ -43,6 +43,16 @@ pub fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>> {
 }
 
 // split lines
+pub fn u8_grid(buffer: &String, split: char) -> Vec<Vec<u8>> {
+    let vstr: Vec<&str> = buffer.split(split).collect();
+    trace!("vstr {:?}", &vstr);
+    let vvu8: Vec<Vec<u8>> = vstr.iter().map(|e| e.as_bytes().to_vec()).collect();
+    trace!("vstr {:?}", &vvu8);
+    vvu8
+}
+
+
+// split lines
 // convert to ints
 pub fn int_list(buffer: &String, split: char) -> Vec<u32> {
     let vstr: Vec<&str> = buffer.split(split).collect();
