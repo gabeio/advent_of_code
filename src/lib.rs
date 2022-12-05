@@ -13,7 +13,7 @@ pub fn readin() -> String {
     return buffer.to_string();
 }
 
-trait AOC {
+pub trait AOC {
     fn int_grid(&self, split: char) -> Vec<Vec<u32>>;
     fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>>;
     fn u8_grid(buffer: &String, split: char) -> Vec<Vec<u8>>;
