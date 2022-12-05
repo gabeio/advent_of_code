@@ -13,6 +13,24 @@ pub fn readin() -> String {
     return buffer.to_string();
 }
 
+trait MyTrait {
+    pub fn int_grid(&self, split: char) -> Vec<Vec<u32>>;
+}
+
+impl MyTrait for &String {
+    pub fn int_grid(&self, split: char) -> Vec<Vec<u32>> {
+        // convert buffer to lines
+        let vstr: Vec<&str> = self.split(split).collect();
+        trace!("vstr {:?}", &vstr);
+        let vstr: Vec<Vec<char>> = vstr.iter().map(|e| e.chars().collect()).collect();
+        let convert = |x: char| String::from(x).parse().unwrap();
+        let vconvert = |x: Vec<char>| x.clone().into_iter().map(convert).collect();
+        let vint: Vec<Vec<u32>> = vstr.clone().into_iter().map(vconvert).collect();
+        trace!("vint {:?}", &vint);
+        vint
+    }
+}
+
 // split lines
 // split lines by character
 // parse characters into ints
