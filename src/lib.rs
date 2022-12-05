@@ -14,11 +14,11 @@ pub fn readin() -> String {
 }
 
 trait MyTrait {
-    pub fn int_grid(&self, split: char) -> Vec<Vec<u32>>;
+    fn int_grid(&self, split: char) -> Vec<Vec<u32>>;
 }
 
 impl MyTrait for &String {
-    pub fn int_grid(&self, split: char) -> Vec<Vec<u32>> {
+    fn int_grid(&self, split: char) -> Vec<Vec<u32>> {
         // convert buffer to lines
         let vstr: Vec<&str> = self.split(split).collect();
         trace!("vstr {:?}", &vstr);
