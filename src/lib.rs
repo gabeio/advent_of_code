@@ -15,11 +15,11 @@ pub fn readin() -> String {
 
 pub trait AOC {
     fn int_grid(&self, split: char) -> Vec<Vec<u32>>;
-    fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>>;
-    fn u8_grid(buffer: &String, split: char) -> Vec<Vec<u8>>;
-    fn int_list(buffer: &String, split: char) -> Vec<u32>;
-    fn str_list(buffer: &String, split: char) -> Vec<&str>;
-    fn string_list(buffer: &String, split: char) -> Vec<String>;
+    fn string_grid(&self, split: char) -> Vec<Vec<String>>;
+    fn u8_grid(&self, split: char) -> Vec<Vec<u8>>;
+    fn int_list(&self, split: char) -> Vec<u32>;
+    fn str_list(&self, split: char) -> Vec<&str>;
+    fn string_list(&self, split: char) -> Vec<String>;
 }
 
 impl AOC for &String {
@@ -42,8 +42,8 @@ impl AOC for &String {
     // split lines
     // split lines by character
     // collect into grid
-    fn string_grid(buffer: &String, split: char) -> Vec<Vec<String>> {
-        let vstr: Vec<&str> = buffer.split(split).collect();
+    fn string_grid(&self, split: char) -> Vec<Vec<String>> {
+        let vstr: Vec<&str> = self.split(split).collect();
         trace!("vstr {:?}", &vstr);
         let vstr: Vec<Vec<char>> = vstr.iter().map(|e| e.chars().collect()).collect();
         let convert = |x: char| String::from(x);
@@ -53,8 +53,8 @@ impl AOC for &String {
     }
 
     // split lines
-    fn u8_grid(buffer: &String, split: char) -> Vec<Vec<u8>> {
-        let vstr: Vec<&str> = buffer.split(split).collect();
+    fn u8_grid(&self, split: char) -> Vec<Vec<u8>> {
+        let vstr: Vec<&str> = self.split(split).collect();
         trace!("vstr {:?}", &vstr);
         let vvu8: Vec<Vec<u8>> = vstr.iter().map(|e| e.as_bytes().to_vec()).collect();
         trace!("vstr {:?}", &vvu8);
@@ -63,8 +63,8 @@ impl AOC for &String {
 
     // split lines
     // convert to ints
-    fn int_list(buffer: &String, split: char) -> Vec<u32> {
-        let vstr: Vec<&str> = buffer.split(split).collect();
+    fn int_list(&self, split: char) -> Vec<u32> {
+        let vstr: Vec<&str> = self.split(split).collect();
         trace!("vstr {:?}", &vstr);
         let convert = |x: &str| String::from(x).parse().unwrap();
         let vint: Vec<u32> = vstr.clone().into_iter().map(convert).collect();
@@ -73,15 +73,15 @@ impl AOC for &String {
     }
 
     // split lines
-    fn str_list(buffer: &String, split: char) -> Vec<&str> {
-        let vstr: Vec<&str> = buffer.split(split).collect();
+    fn str_list(&self, split: char) -> Vec<&str> {
+        let vstr: Vec<&str> = self.split(split).collect();
         trace!("vstr {:?}", &vstr);
         vstr
     }
 
     // split lines
-    fn string_list(buffer: &String, split: char) -> Vec<String> {
-        let vstr: Vec<&str> = buffer.split(split).collect();
+    fn string_list(&self, split: char) -> Vec<String> {
+        let vstr: Vec<&str> = self.split(split).collect();
         trace!("vstr {:?}", &vstr);
         let convert = |x: &str| String::from(x);
         let vstring: Vec<String> = vstr.clone().into_iter().map(convert).collect();
