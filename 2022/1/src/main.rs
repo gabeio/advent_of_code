@@ -5,11 +5,7 @@ extern crate aoc;
 #[allow(unused_imports)]
 use aoc::{
     readin,
-    int_grid,
-    string_grid,
-    int_list,
-    str_list,
-    string_list,
+    AOC,
 };
 
 #[allow(unused_imports)]
@@ -19,7 +15,7 @@ fn main() {
     env_logger::init();
     let buffer = readin();
     trace!("buffer {:?}", &buffer);
-    let result = str_list(&buffer, '\n');
+    let result = buffer.str_list('\n');
     trace!("result {:?}", &result);
     println!("part 1: {:?}", part1(&result));
     println!("part 2: {:?}", part2(&result));
