@@ -5,12 +5,7 @@ extern crate aoc;
 #[allow(unused_imports)]
 use aoc::{
     readin,
-    int_grid,
-    string_grid,
-    u8_grid,
-    int_list,
-    str_list,
-    string_list,
+    AOC,
 };
 
 #[allow(unused_imports)]
@@ -23,14 +18,14 @@ fn main() {
     env_logger::init();
     let buffer = readin();
     trace!("buffer {:?}", &buffer);
-    let result = u8_grid(&buffer, '\n');
+    let result = (&buffer).u8_grid('\n');
     trace!("result {:?}", &result);
     println!("part 1: {:?}", part1(&result));
     println!("part 2: {:?}", part2(&result));
 }
 
-const lower: u8 = 96;
-const upper: u8 = 38;
+const LOWER: u8 = 96;
+const UPPER: u8 = 38;
 
 fn unique<T: Clone + PartialEq>(a: Vec<T>) -> Vec<T> {
     let mut a = a.clone();
@@ -46,9 +41,9 @@ fn unique<T: Clone + PartialEq>(a: Vec<T>) -> Vec<T> {
 
 fn adjust(a: u8) -> u8 {
     if a > 97 {
-        a  - lower
+        a  - LOWER
     } else {
-        a - upper
+        a - UPPER
     }
 }
 
