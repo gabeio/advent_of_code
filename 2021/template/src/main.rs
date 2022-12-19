@@ -1,39 +1,33 @@
 #[macro_use]
 extern crate log;
+extern crate aoc;
 
-use std::io::{self, Read};
+#[allow(unused_imports)]
+use aoc::{
+    readin,
+    int_grid,
+    string_grid,
+    int_list,
+    str_list,
+    string_list,
+};
 
-fn main() -> io::Result<()> {
+#[allow(unused_imports)]
+use std::collections::BTreeMap;
+
+fn main() {
     env_logger::init();
     let buffer = readin();
     trace!("buffer {:?}", &buffer);
-    let mut vstr: Vec<&str> = buffer.split(',').collect();
-    trace!("vstr {:?}", &vstr);
-    let last: Vec<&str> = vstr.pop().unwrap().split('\n').collect();
-    trace!("last {:?}", &last);
-    vstr.push(last[0]);
-    let convert = |x: &str| String::from(x).parse().unwrap();
-    let vint: Vec<u32> = vstr.to_vec().into_iter().map(convert).collect();
-    trace!("vint {:?}", &vint);
-    println!("part 1: {:?}", part1(&vint));
-    println!("part 2: {:?}", part2(&vint));
-    Ok(())
+    let result = int_grid(&buffer, '\n');
+    trace!("result {:?}", &result);
+    println!("part 1: {:?}", part1(&result));
+    println!("part 2: {:?}", part2(&result));
+}
+fn part1(input: &Vec<Vec<u32>>) -> u32 {
+    0
 }
 
-fn readin() -> String {
-    let mut buffer = String::new();
-    let stdin = io::stdin();
-    let mut handle = stdin.lock();
-    let _result = handle.read_to_string(&mut buffer);
-    return buffer;
-}
-
-fn convert(x: &str) -> u32 {
-    return x.parse().unwrap();
-}
-
-fn part1(input: &Vec<u32>) -> u32 {
-}
-
-fn part2(input: &Vec<u32>) -> u32 {
+fn part2(input: &Vec<Vec<u32>>) -> u32 {
+    0
 }

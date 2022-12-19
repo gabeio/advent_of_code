@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 log = "*"
 env_logger = "*"
+aoc = { git = "https://github.com/gabeio/advent_of_code", branch = "aoc"}
